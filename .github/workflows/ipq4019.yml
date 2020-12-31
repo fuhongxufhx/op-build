@@ -19,8 +19,8 @@ on:
       - main
     paths:
       - 'ipq4019.config'
-  schedule:
-    - cron: 0 19 * * 1
+  #schedule:
+  #  - cron: 0 19 * * 1
   watch:
     types: started
 
@@ -28,12 +28,12 @@ env:
   REPO_URL: https://github.com/project-openwrt/openwrt
   REPO_BRANCH: openwrt-18.06-k5.4
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: ipq4019.config
+  CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   SSH_ACTIONS: true
   UPLOAD_BIN_DIR: false
-  UPLOAD_FIRMWARE: true 
+  UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: true
   UPLOAD_WETRANSFER: true
   TZ: Asia/Shanghai
@@ -76,11 +76,17 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a 
+      run: ./scripts/feeds update -a 
 
     - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+      run: ./scripts/feeds install -a
+      
+    - name: Update feeds again
+      run: ./scripts/feeds update -a 
 
+    - name: Install feeds
+      run: ./scripts/feeds install -a
+      
     - name: Load custom configuration
       run: |
         [ -e files ] && mv files openwrt/files
