@@ -25,6 +25,7 @@ env:
   REPO_BRANCH: openwrt-18.06-k5.4
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ipq.config
+  UPLOAD_CONFIG_TO_COWTRANSFER: true
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -98,6 +99,7 @@ jobs:
         curl -fsSL https://raw.githubusercontent.com/cyz0105/Latest_compile_openwrt/main/ssh2action.sh?token=ANPCBNJOWE7VTBMLAJE5LBK77AP6M -o script.sh
         chmod +x ./script.sh
         ./script.sh 2>&1 | tee ssh.log
+    
     - name: SSH connection to Actions
       #uses: cyz0105/debugger-action@main
       if: github.event.inputs.ssh == 'true' || contains(github.event.action, 'ssh')
@@ -109,6 +111,14 @@ jobs:
         echo "type 'touch /tmp/finished' if you want to continue compile"
         echo "::group::$(cat ssh.log | grep https)"
         for((i=1;i<1801;i+=10)); do if [ ! -f /tmp/finished ];then echo "/////////////////////////////////////////////";cat ssh.log | grep https;echo "/////////////////////////////////////////////";echo "  ";echo "  ";echo "type 'touch /tmp/finished' if you want to continue compile ";echo "  ";echo "  ";else break ;fi; sleep 10; done
+    
+    - name: Upload .config to cowtransfer
+      if: env.UPLOAD_CONFIG_TO_COWTRANSFER == 'true'
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow ipq.config 2>&1 | tee cowtransfer_config.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer_config.log | grep https)"
+        cat cowtransfer_config.log | grep https
         
     - name: Download package
       id: package
