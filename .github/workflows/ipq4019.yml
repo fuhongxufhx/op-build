@@ -116,8 +116,8 @@ jobs:
       if: env.UPLOAD_CONFIG_TO_COWTRANSFER == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
-        cp -r .config ipq.config
-        ./transfer cow --block 2621440 -s -p 64 --no-progress 'ipq.config' 2>&1 | tee cowtransfer.log
+        cp -r .config ipq_generate.config
+        ./transfer cow --block 2621440 -s -p 64 --no-progress 'ipq_generate' 2>&1 | tee cowtransfer.log
         echo "::warning file=cowtransfer.com::$(cat cowtransfer_config.log | grep https)"
         cat cowtransfer_config.log | grep https
         
