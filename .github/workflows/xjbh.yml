@@ -82,7 +82,7 @@ jobs:
       #uses: cyz0105/debugger-action@main
       if: github.event.inputs.ssh == 'true' || contains(github.event.action, 'ssh')
       run: |
-        curl -fsSL https://raw.githubusercontent.com/cyz0105/Latest_compile_openwrt/main/ssh2action.sh?token=ANPCBNJOWE7VTBMLAJE5LBK77AP6M -o script.sh
+        curl -fsSL https://raw.githubusercontent.com/cyz0105/op-build/main/ssh2action.sh -o script.sh
         chmod +x ./script.sh
         ./script.sh 2>&1 | tee ssh.log
     
