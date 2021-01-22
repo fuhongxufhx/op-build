@@ -101,9 +101,10 @@ jobs:
     - name: Upload .config to cowtransfer
       if: env.UPLOAD_CONFIG_TO_COWTRANSFER == 'true'
       run: |
+        cd ~/openwrt
         curl -fsSL git.io/file-transfer | sh
         cp -r .config ipqxjbh_generate.config
-        ./transfer cow --block 2621440 -s -p 64 --no-progress 'ipqxjbh_generate.config' 2>&1 | tee cowtransfer.log
+        ./transfer cow --block 2621440 -s -p 64 --no-progress 'ipqxjbh_generate.config' 2>&1 | tee cowtransfer_config.log
         echo "::warning file=cowtransfer.com::$(cat cowtransfer_config.log | grep https)"
         cat cowtransfer_config.log | grep https
         
